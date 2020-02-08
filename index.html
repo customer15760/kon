@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ファイルの中身の読み取り－FileReader</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+#drop {
+	width: 650px;
+	height: 300px;
+	border: 1px solid black;
+	background-color: #eeeeee;
+}
+#drop img {
+	margin: 1em;
+}
+</style>
+</head>
+<body>
+
+<h1>ファイルの中身の読み取り－FileReader</h1>
+
+<p>ファイルをドロップ。</p>
+<div id="drop"></div>
+
+<script>
+(function () {
+
+// div要素にドロップ関連のイベントのリスナーをセット
+var div_el = document.getElementById("drop");
+div_el.addEventListener("dragenter", function(event) {
+	event.preventDefault();
+}, false);
+div_el.addEventListener("dragover", function(event) {
+	event.preventDefault();
+}, false);
+div_el.addEventListener("drop", function(event) {
+	event.preventDefault();
+	// FileListオブジェクト
+	var files = event.dataTransfer.files;
+	// ドロップされたファイルのFileオブジェクト
+	var file = files[0];
+	if( ! file ) { return; }
+	// ファイルのMIMEタイプをチェック
+	if( ! file.type.match(/^image\//) ) { return; }
+	// FileReaderオブジェクト
+	var reader = new FileReader();
+	// Data URL形式でファイル・データを取得
+	reader.readAsDataURL(file);
+	// ファイルの読み取りが成功したときの処理
+	reader.onload = function() {
+		// img要素を生成しdiv要素に追加
+		var img_el = document.createElement("img");
+		img_el.src = reader.result;
+		img_el.width = 80;
+		div_el.appendChild(img_el);
+	};
+}, false);
+
+})();
+</script>
+
+</body>
+</html>
